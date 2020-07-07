@@ -1,6 +1,7 @@
 	package com.api.v1.model;
 
-import javax.persistence.*;
+	import javax.persistence.*;
+	import javax.validation.constraints.*;
 
 @Entity
 @Table(name="veiculos")
@@ -9,32 +10,49 @@ public class VeiculoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    private Integer id;
+	private Integer id;
 
+	@NotEmpty(message = "Preencha o campo corretamente!")
+	@Size(min = 5, max = 255)
     @Column(name="nome", length = 255)
-    private String nome;
+	private String nome;
 
+	@NotEmpty(message = "Preencha o campo corretamente!")
+	@Size(min = 10, max = 255)
     @Column(name="categoria", length = 255)
-    private String categoria;
+	private String categoria;
 
+	@NotEmpty(message = "Preencha o campo corretamente!")
+	@Size(min = 5, max = 255)
     @Column(name="marca", length = 255)
-    private String marca;
+	private String marca;
 
+	@Min(1990)
     @Column(name="ano")
-    private Integer ano;
+	private Integer ano;
 
+	@NotEmpty(message = "Preencha o campo corretamente!")
+	@Size(min = 10, max = 255)
     @Column(name="imagem", length = 255)
-    private String imagem;
+	private String imagem;
 
+	@NotEmpty(message = "Preencha o campo corretamente!")
+	@Size(min = 10, max = 255)
     @Column(name="nome_comercial", length = 255)
-    private String nome_comercial;
+	private String nome_comercial;
 
+	@NotEmpty(message = "Preencha o campo corretamente!")
+	@Size(min = 2, max = 255)
     @Column(name="eixo", length = 255)
-    private String eixo;
+	private String eixo;
 
+	@NotEmpty(message = "Preencha o campo corretamente!")
+	@Size(min = 2, max = 255)
     @Column(name="geracao", length = 255)
-    private String geracao;
+	private String geracao;
 
+	@NotEmpty(message = "Preencha o campo corretamente!")
+	@Size(min = 10, max = 255)
     @Column(name="descricao", length = 255)
     private String descricao;
 

@@ -3,6 +3,8 @@ package com.api.v1.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import com.api.v1.model.VeiculoModel;
 import com.api.v1.repository.VeiculoRepository;
 
@@ -28,13 +30,12 @@ import org.springframework.web.bind.annotation.*;
 //     "visualizar": 15
 // } 
 
-
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/veiculos")
 
 public class VeiculoController {
-
+    
     @Autowired    
     VeiculoRepository repository;
 
@@ -65,8 +66,8 @@ public class VeiculoController {
     }
 
     @PostMapping("")
-    public ResponseEntity<VeiculoModel> saveVeiculo(@RequestBody @Validated VeiculoModel veiculo){
-        return new ResponseEntity<VeiculoModel> (repository.save(veiculo), HttpStatus.OK); 
+    public ResponseEntity<VeiculoModel> saveVeiculo( @RequestBody  @Valid VeiculoModel veiculo) {
+        return new ResponseEntity<VeiculoModel> (repository.save(veiculo), HttpStatus.CREATED); 
     }
 
     @DeleteMapping("{id}")
