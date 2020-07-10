@@ -32,25 +32,44 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/veiculos")
+@RequestMapping("/vehicles")
 
 public class VeiculoController {
     
     @Autowired    
-    VeiculoRepository repository;
+    private VeiculoRepository repository;
+
+    VeiculoController(VeiculoRepository repository) {
+        this.repository = repository;
+    }
 
     @GetMapping("")
-    public ResponseEntity<List<VeiculoModel>> getAllVeiculos(){
-        List<VeiculoModel> veiculosList = repository.findAll();
-
-        if(veiculosList.isEmpty()){
+    public ResponseEntity<List<VeiculoModel>> getSearch(@RequestParam("search") String search) {
+        if (search.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<List<VeiculoModel>> (veiculosList, HttpStatus.OK);
+        List<VeiculoModel> veiculosResult = repository.findByNomeLike(search);
+        return new ResponseEntity<List<VeiculoModel>>(veiculosResult, HttpStatus.OK);
+    }
+    
+    @GetMapping("/views")
+    public Object getStatic() {
+        List<Object> veiculosResult = repository.findByViews();
+        return new ResponseEntity<List<Object>>(veiculosResult, HttpStatus.OK);
+    }
+    
+    @GetMapping("/all")
+    public ResponseEntity<List<VeiculoModel>> getAllVeiculos() {
+        List<VeiculoModel> veiculosList = repository.findAll();
+
+        if (veiculosList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<List<VeiculoModel>>(veiculosList, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<VeiculoModel> getOneVeiculo(@PathVariable(value = "id") Integer id){
+    public ResponseEntity<VeiculoModel> getOneVeiculo(@PathVariable(value = "id") Integer id) {
         Optional<VeiculoModel> veiculo = repository.findById(id);
 
         // Contador de visualizações
@@ -59,11 +78,11 @@ public class VeiculoController {
         Veiculoview.setVisualizar(Veiculoview.getVisualizar() + 1);
         repository.save(Veiculoview);
 
-        if(!veiculo.isPresent()){
+        if (!veiculo.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<VeiculoModel> (Veiculoview, HttpStatus.OK);
-    }
+        return new ResponseEntity<VeiculoModel>(Veiculoview, HttpStatus.OK);
+    }    
 
     @PostMapping("")
     public ResponseEntity<VeiculoModel> saveVeiculo( @RequestBody  @Valid VeiculoModel veiculo) {
