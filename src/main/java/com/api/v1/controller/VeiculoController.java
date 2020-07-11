@@ -37,30 +37,32 @@ import org.springframework.web.bind.annotation.*;
 public class VeiculoController {
     
     @Autowired    
-    private VeiculoRepository repository;
+    private final VeiculoRepository repository;
 
-    VeiculoController(VeiculoRepository repository) {
+    VeiculoController(final VeiculoRepository repository) {
         this.repository = repository;
     }
 
     @GetMapping("")
-    public ResponseEntity<List<VeiculoModel>> getSearch(@RequestParam("search") String search) {
+    public ResponseEntity<List<VeiculoModel>> getSearch(@RequestParam("search") final String search) {
         if (search.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<VeiculoModel> veiculosResult = repository.findByNomeLike(search);
+        final List<VeiculoModel> veiculosResult = repository.findByNomeLike(search);
         return new ResponseEntity<List<VeiculoModel>>(veiculosResult, HttpStatus.OK);
     }
     
-    @GetMapping("/views")
-    public Object getStatic() {
-        List<Object> veiculosResult = repository.findByViews();
-        return new ResponseEntity<List<Object>>(veiculosResult, HttpStatus.OK);
+    @GetMapping("/visualized/{ordem}")
+    public Object getMoreView(@PathVariable(value = "ordem") final String ordem) {
+        if (ordem == "asc") {
+            return new ResponseEntity<List<Object>>(repository.findByMax(), HttpStatus.OK);
+        }
+        return new ResponseEntity<List<Object>>(repository.findByMin(), HttpStatus.OK);
     }
     
     @GetMapping("/all")
     public ResponseEntity<List<VeiculoModel>> getAllVeiculos() {
-        List<VeiculoModel> veiculosList = repository.findAll();
+        final List<VeiculoModel> veiculosList = repository.findAll();
 
         if (veiculosList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -68,13 +70,19 @@ public class VeiculoController {
         return new ResponseEntity<List<VeiculoModel>>(veiculosList, HttpStatus.OK);
     }
 
+    @GetMapping("/all/{limit}")
+    public ResponseEntity<List<VeiculoModel>> getAllVeiculosLimit(@PathVariable(value = "limit") final Integer limit) {
+        final List<VeiculoModel> result = repository.findByLimit(limit);
+        return new ResponseEntity<List<VeiculoModel>>(result, HttpStatus.OK);
+    }
+
     @GetMapping("{id}")
-    public ResponseEntity<VeiculoModel> getOneVeiculo(@PathVariable(value = "id") Integer id) {
-        Optional<VeiculoModel> veiculo = repository.findById(id);
+    public ResponseEntity<VeiculoModel> getOneVeiculo(@PathVariable(value = "id") final Integer id) {
+        final Optional<VeiculoModel> veiculo = repository.findById(id);
 
         // Contador de visualizações
 
-        VeiculoModel Veiculoview = veiculo.get();
+        final VeiculoModel Veiculoview = veiculo.get();
         Veiculoview.setVisualizar(Veiculoview.getVisualizar() + 1);
         repository.save(Veiculoview);
 
@@ -85,13 +93,13 @@ public class VeiculoController {
     }    
 
     @PostMapping("")
-    public ResponseEntity<VeiculoModel> saveVeiculo( @RequestBody  @Valid VeiculoModel veiculo) {
+    public ResponseEntity<VeiculoModel> saveVeiculo( @RequestBody  @Valid final VeiculoModel veiculo) {
         return new ResponseEntity<VeiculoModel> (repository.save(veiculo), HttpStatus.CREATED); 
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<VeiculoModel> deleteVeiculo(@PathVariable(value = "id") Integer id){
-        Optional<VeiculoModel> veiculo = repository.findById(id);
+    public ResponseEntity<VeiculoModel> deleteVeiculo(@PathVariable(value = "id") final Integer id){
+        final Optional<VeiculoModel> veiculo = repository.findById(id);
 
         if(!veiculo.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -102,8 +110,8 @@ public class VeiculoController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<VeiculoModel> editVeiculo(@PathVariable(value = "id") Integer id, @RequestBody @Validated  VeiculoModel veiculo){
-        Optional<VeiculoModel> veiculoEdit = repository.findById(id);
+    public ResponseEntity<VeiculoModel> editVeiculo(@PathVariable(value = "id") final Integer id, @RequestBody @Validated final  VeiculoModel veiculo){
+        final Optional<VeiculoModel> veiculoEdit = repository.findById(id);
 
         if(!veiculoEdit.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

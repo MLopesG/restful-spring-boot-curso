@@ -12,6 +12,11 @@ public interface VeiculoRepository extends JpaRepository<VeiculoModel, Integer> 
     List<VeiculoModel> findByNomeLike(String nome);
 
     @Query(value = "SELECT id, nome_comercial, visualizar FROM Veiculos order by visualizar desc limit 4", nativeQuery = true)
-    List<Object> findByViews();
+    List<Object> findByMax();
 
+    @Query(value = "SELECT id, nome_comercial, visualizar FROM Veiculos order by visualizar asc limit 4", nativeQuery = true)
+    List<Object> findByMin();
+
+    @Query(value = "SELECT * FROM Veiculos order by id desc limit :limit", nativeQuery = true)
+    List<VeiculoModel> findByLimit(Integer limit);
 }
