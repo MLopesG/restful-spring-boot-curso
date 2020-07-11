@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface VeiculoRepository extends JpaRepository<VeiculoModel, Integer> {
 
-    @Query(value = "SELECT * FROM Veiculos u WHERE u.nome like %:nome%", nativeQuery = true)
+    @Query(value = "SELECT * FROM Veiculos u WHERE u.nome ilike %:nome% or u.nome_comercial ilike %:nome% or u.marca ilike %:nome%", nativeQuery = true)
     List<VeiculoModel> findByNomeLike(String nome);
 
     @Query(value = "SELECT id, nome_comercial, visualizar FROM Veiculos order by visualizar desc limit 4", nativeQuery = true)
