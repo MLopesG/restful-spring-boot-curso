@@ -52,11 +52,13 @@ public class VeiculoController {
         return new ResponseEntity<List<VeiculoModel>>(veiculosResult, HttpStatus.OK);
     }
     
-    @GetMapping("/visualized/{ordem}")
-    public Object getMoreView(@PathVariable(value = "ordem") final String ordem) {
-        if (ordem == "asc") {
-            return new ResponseEntity<List<Object>>(repository.findByMax(), HttpStatus.OK);
-        }
+    @GetMapping("/most-viewed")
+    public Object getmostViewed() {
+        return new ResponseEntity<List<Object>>(repository.findByMax(), HttpStatus.OK);
+    }
+
+    @GetMapping("/least-viewed")
+    public Object getlastViewed() {
         return new ResponseEntity<List<Object>>(repository.findByMin(), HttpStatus.OK);
     }
     
