@@ -19,9 +19,11 @@ import javax.mail.internet.MimeMessage;
 import com.api.v1.model.EmailModel;
 import com.api.v1.model.VeiculoModel;
 import com.api.v1.repository.VeiculoRepository;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@CrossOrigin(origins = "*")
 public class EmailController {
 
     @Autowired
