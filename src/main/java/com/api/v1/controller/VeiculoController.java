@@ -120,6 +120,8 @@ public class VeiculoController {
         }
 
         veiculo.setId(veiculoEdit.get().getId());
+        veiculo.setVisualizar(veiculoEdit.get().getVisualizar());
+        
         return new ResponseEntity<VeiculoModel> (repository.save(veiculo),HttpStatus.OK);
     }
 }
